@@ -1,3 +1,7 @@
+* {
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
 body {
     margin: 0;
     background-color: aliceblue;
@@ -34,11 +38,57 @@ li a:hover:not(.active) {
 }
 
 .main-container {
-    margin: 0 auto;
+    margin: auto;
+    margin-top: 6vh;
     max-width: 90vw;
 }
 
+.card-container {
+    width: 72vw;
+    margin: auto;
+    margin-top: 4vh;
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+}
+
 .card-item {
-    background-color: aqua;
+    background-color: #a60b00;
+    color: aliceblue;
     display: flex;
+    flex-direction: column;
+    width: 12vw;
+    margin: 1.2vw;
+    border-radius: 24px;
+    padding: 12px 8px 24px;
+    box-shadow: 10px 10px 23px -8px rgba(0,0,0,0.5);
+    -webkit-box-shadow: 10px 10px 23px -8px rgba(0,0,0,0.5);
+    -moz-box-shadow: 10px 10px 23px -8px rgba(0,0,0,0.5);
+}
+
+.card-item h4 {
+    margin: 12px 0 6px;
+}
+
+.card-item img {
+    border-radius: 24px;
+    margin: 1.2vh auto;
+    width: 18vh;
+    height: 20vh;
+}
+
+.text-align-center {
+    text-align: center;
+}
+
+
+.descripcion {
+    margin-bottom: 6px;
+}
+
+.font-weight-500 {
+    font-weight: 500;
+}
+
+.font-weight-600 {
+    font-weight: 600;
 }
