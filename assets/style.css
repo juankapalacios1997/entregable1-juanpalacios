@@ -44,7 +44,7 @@ li a:hover:not(.active) {
 }
 
 .card-container {
-    width: 72vw;
+    width: 84vw;
     margin: auto;
     margin-top: 4vh;
     display: grid;
@@ -56,8 +56,8 @@ li a:hover:not(.active) {
     color: aliceblue;
     display: flex;
     flex-direction: column;
-    width: 12vw;
-    height: 42vh;
+    width: 16.5vw;
+    height: 53vh;
     margin: 1.2vw;
     border-radius: 24px;
     padding: 12px 8px 24px;
@@ -67,15 +67,15 @@ li a:hover:not(.active) {
 }
 
 .card-item h4 {
-    margin: 12px auto 12px;
+    margin: 8px auto 8px;
     max-width: 11vw;
 }
 
 .card-item img {
     border-radius: 24px;
     margin: 1.2vh auto;
-    width: 18vh;
-    height: 20vh;
+    width: 28vh;
+    height: 32vh;
 }
 
 .text-align-center {

@@ -26,7 +26,7 @@ function crearDescripciones(producto) {
     const descripcion = [
         " es un deleite al paladar.", 
         " es una exaltacion los sentidos.",
-        ", uno de los mejores productos de nuestra tienda."
+        ", uno de nuestros mejores productos."
     ]
 
     const randomIndex = Math.floor(Math.random() * descripcion.length);
