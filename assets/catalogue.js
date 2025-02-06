@@ -6,6 +6,12 @@ export const catalogoCompleto = [
         precioUsd: 51.99
     },
     {
+        nombre: "Johnny Walker Blue Label",
+        categoria: "Whisky",
+        cantidad: " 750 ml",
+        precioUsd: 109.99
+    },
+    {
         nombre: "Buchanan's Deluxe 12 anos Blended Scotch",
         categoria: "Whisky",
         cantidad: " 750 ml",

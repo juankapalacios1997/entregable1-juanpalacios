@@ -57,6 +57,7 @@ li a:hover:not(.active) {
     display: flex;
     flex-direction: column;
     width: 12vw;
+    height: 42vh;
     margin: 1.2vw;
     border-radius: 24px;
     padding: 12px 8px 24px;
@@ -66,7 +67,8 @@ li a:hover:not(.active) {
 }
 
 .card-item h4 {
-    margin: 12px 0 6px;
+    margin: 12px auto 12px;
+    max-width: 11vw;
 }
 
 .card-item img {
@@ -82,7 +84,11 @@ li a:hover:not(.active) {
 
 
 .descripcion {
-    margin-bottom: 6px;
+    margin: auto;
+    max-width: 10vw;
+    font-weight: normal;
+    font-size: 12px;
+    margin-bottom: 10px;
 }
 
 .font-weight-500 {
