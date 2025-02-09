@@ -1,5 +1,7 @@
 import { catalogoCompleto } from "../assets/catalogue.js";
 
+const carrito = [];
+
 function bienvenida() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
 
@@ -31,9 +33,15 @@ function crearDescripciones(producto) {
 
     const randomIndex = Math.floor(Math.random() * descripcion.length);
 
-    console.log(randomIndex);
-
     return `${producto + descripcion[randomIndex]}`
+}
+
+function anadirAlCarrito(id) {
+    const itemToAdd = catalogoCompleto.find(i => i.id === id);
+
+    carrito.push(itemToAdd);
+
+    console.log(carrito);
 }
 
 const cardContainer = document.getElementById("cardContainer");
@@ -47,13 +55,24 @@ catalogoCompleto.forEach((item) => {
             <span class="text-align-center font-weight-500 descripcion">${crearDescripciones(item.nombre)}</span>
             <span class="text-align-center font-weight-500">Categoria: ${item.categoria}</span>
             <span class="text-align-center font-weight-500">Precio: ${convertirDolarPesoArg(item.precioUsd)}</span>
+            <div class="actions-section">
+            </div>
         </div>
     `;
+
+    const btn = document.createElement("button");
+
+    btn.innerText = "Anadir al carrito";
+
+    btn.addEventListener("click", () => anadirAlCarrito(item.id));
+
+    card.querySelector(".actions-section").appendChild(btn);
+
     cardContainer.appendChild(card);
 })
 
-const nombre = bienvenida();
+// const nombre = bienvenida();
 
-const mainTitle = document.getElementById("mainTitle");
+// const mainTitle = document.getElementById("mainTitle");
 
-mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
+// mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;

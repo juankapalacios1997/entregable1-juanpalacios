@@ -98,3 +98,7 @@ li a:hover:not(.active) {
 .font-weight-600 {
     font-weight: 600;
 }
+
+.actions-section {
+    margin: 2vh auto 0;
+}
