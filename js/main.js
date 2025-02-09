@@ -40,16 +40,18 @@ function crearDescripciones(producto) {
     return `${producto + descripcion[randomIndex]}`
 }
 
-function eliminarItem(id) {
-    if (!id) {
+function eliminarItem(carritoId) {
+    if (!carritoId) {
         return;
     }
 
-    carrito = carrito.filter(item => item.id !== id);
-
+    const id = carrito.find(item => item.carritoId === carritoId)?.id;
+    
     const elementToRemove = document.getElementById(`${id}`);
 
     elementToRemove.parentNode.removeChild(elementToRemove);
+
+    carrito = carrito.filter(item => item.carritoId !== carritoId);
 
     if (!carrito.length) {
         const toRemoveAllEle = document.getElementById("carritoContainerChild");
@@ -58,6 +60,8 @@ function eliminarItem(id) {
     }
 
     actualizarPrecioCarrito();
+
+    actualizarLocalStorage();
 
 }
 
@@ -70,6 +74,10 @@ function calcularPrecioCarrito() {
 }
 
 function actualizarPrecioCarrito() {
+    if (!carrito.length) {
+        return;
+    }
+
     const precioTotal = document.getElementById("precioTotal");
 
     precioTotal.innerText = calcularPrecioCarrito();
@@ -128,7 +136,7 @@ function handleAllCarrito() {
 
         eliminarBtn.innerText = "Eliminar";
 
-        eliminarBtn.addEventListener("click", () => eliminarItem(item.id))
+        eliminarBtn.addEventListener("click", () => eliminarItem(item.carritoId))
 
         const cardDescription = carritoCard.querySelector(".card-description");
 
@@ -169,7 +177,7 @@ function handleCarritoItem(item) {
 
     eliminarBtn.innerText = "Eliminar";
 
-    eliminarBtn.addEventListener("click", () => eliminarItem(item.id))
+    eliminarBtn.addEventListener("click", () => eliminarItem(item.carritoId))
 
     const cardDescription = carritoCard.querySelector(".card-description");
 
@@ -183,7 +191,7 @@ function handleCarritoItem(item) {
 function anadirAlCarrito(id) {
     const itemToAdd = catalogoCompleto.find(i => i.id === id);
 
-    carrito.push(itemToAdd);
+    carrito.push({...itemToAdd, carritoId: Math.floor(Math.random() * 9999) });
 
     handleCarritoItem(itemToAdd);
 }
@@ -229,7 +237,14 @@ function inizializarApp() {
         const infoUsuarioJson = JSON.parse(localInfoUsuario);
 
         nombre = infoUsuarioJson.nombre;
-        carrito = infoUsuarioJson.carrito;
+        carrito = infoUsuarioJson.carrito.map(item => (
+            {
+                ...item,
+                carritoId: Math.floor(Math.random() * 9999)
+            }
+        ));
+
+        console.log(carrito);
 
         handleAllCarrito();
 
