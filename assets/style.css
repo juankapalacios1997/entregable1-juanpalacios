@@ -82,7 +82,15 @@ li a:hover:not(.active) {
     text-align: center;
 }
 
+.carrito-container {
+    margin: 3.5vh auto 0;
+    max-width: 78vw;
+}
+
 .carrito-card-container {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    row-gap: 6vh;
     border-radius: 24px;
     padding: 24px;
 }

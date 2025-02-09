@@ -60,9 +60,8 @@ function handleCarrito(item) {
 
     if (carrito.length === 1 && !carritoLlamado) {
         carritoContainer.innerHTML = `
-            <div class="carrito-card-container" id="carritoCardContainer">
-                <h4>Tu carrito</h4>
-            </div>
+            <h4>Tu carrito</h4>
+            <div class="carrito-card-container" id="carritoCardContainer"></div>
         `
         carritoLlamado = true;
 
