@@ -19,7 +19,7 @@ function convertirDolarPesoArg(precio) {
 
     const conversion = precio * dolarPeso;
 
-    return `$${conversion.toFixed(2)}`;
+    return conversion.toFixed(2);
 }
 
 function crearDescripciones(producto) {
@@ -49,6 +49,13 @@ function eliminarItem(id) {
 
     elementToRemove.parentNode.removeChild(elementToRemove);
 
+    if (!carrito.length) {
+        const toRemoveAllEle = document.getElementById("carritoContainerChild");
+        console.log(toRemoveAllEle);
+        toRemoveAllEle.parentNode.removeChild(toRemoveAllEle);
+        carritoLlamado = false;
+    }
+
 }
 
 function handleCarrito(item) {
@@ -60,8 +67,10 @@ function handleCarrito(item) {
 
     if (carrito.length === 1 && !carritoLlamado) {
         carritoContainer.innerHTML = `
-            <h4>Tu carrito</h4>
-            <div class="carrito-card-container" id="carritoCardContainer"></div>
+            <div id="carritoContainerChild">
+                <h4>Tu carrito</h4>
+                <div class="carrito-card-container" id="carritoCardContainer"></div>
+            </div>
         `
         carritoLlamado = true;
 
@@ -82,7 +91,7 @@ function handleCarrito(item) {
         <img src="${item.imagen}" />
         <div class="card-description">
             <h5>${item.categoria} ${item.nombre} ${item.cantidad}</h5>
-            <span>${item.precio}</span>
+            <span>$${convertirDolarPesoArg(item.precioUsd)}</span>
         </div>
     `
 
@@ -107,35 +116,39 @@ function anadirAlCarrito(id) {
     handleCarrito(itemToAdd);
 }
 
-const cardContainer = document.getElementById("cardContainer");
+function inicializarCatalogo() {
+    const cardContainer = document.getElementById("cardContainer");
 
-catalogoCompleto.forEach((item) => {
-    const card = document.createElement("span");
-    card.innerHTML = `
-        <div class="card-item">
-            <img src="${item.imagen}"/>
-            <h4 class="text-align-center font-weight-600">${item.nombre + " " + item.cantidad}</h4>
-            <span class="text-align-center font-weight-500 descripcion">${crearDescripciones(item.nombre)}</span>
-            <span class="text-align-center font-weight-500">Categoria: ${item.categoria}</span>
-            <span class="text-align-center font-weight-500">Precio: ${convertirDolarPesoArg(item.precioUsd)}</span>
-            <div class="actions-section">
+    catalogoCompleto.forEach((item) => {
+        const card = document.createElement("span");
+        card.innerHTML = `
+            <div class="card-item">
+                <img src="${item.imagen}"/>
+                <h4 class="text-align-center font-weight-600">${item.nombre + " " + item.cantidad}</h4>
+                <span class="text-align-center font-weight-500 descripcion">${crearDescripciones(item.nombre)}</span>
+                <span class="text-align-center font-weight-500">Categoria: ${item.categoria}</span>
+                <span class="text-align-center font-weight-500">Precio: $${convertirDolarPesoArg(item.precioUsd)}</span>
+                <div class="actions-section">
+                </div>
             </div>
-        </div>
-    `;
+        `;
 
-    const btn = document.createElement("button");
+        const btn = document.createElement("button");
 
-    btn.innerText = "Anadir al carrito";
+        btn.innerText = "Anadir al carrito";
 
-    btn.addEventListener("click", () => anadirAlCarrito(item.id));
+        btn.addEventListener("click", () => anadirAlCarrito(item.id));
 
-    card.querySelector(".actions-section").appendChild(btn);
+        card.querySelector(".actions-section").appendChild(btn);
 
-    cardContainer.appendChild(card);
-})
+        cardContainer.appendChild(card);
+    })
+}
 
 const nombre = bienvenida();
 
 const mainTitle = document.getElementById("mainTitle");
 
 mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
+
+inicializarCatalogo();
