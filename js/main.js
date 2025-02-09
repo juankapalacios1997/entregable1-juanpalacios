@@ -147,9 +147,7 @@ function handleCarritoItem(item) {
 
     const carritoContainer = document.getElementById("carritoContainer");
 
-    const carritoCardContainer = document.getElementById("carritoCardContainer");
-
-    if (!carritoCardContainer && !carritoLlamado) {
+    if (!carritoContainer.querySelector("#carritoCardContainer") && !carritoLlamado) {
         carritoContainer.innerHTML = `
             <div id="carritoContainerChild">
                 <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
@@ -165,7 +163,7 @@ function handleCarritoItem(item) {
 
     const carritoCard = crearCarritoCard(item);
 
-    carritoCardContainer.appendChild(carritoCard);
+    carritoContainer.querySelector("#carritoCardContainer").appendChild(carritoCard);
 
     const eliminarBtn = document.createElement("button");
 
