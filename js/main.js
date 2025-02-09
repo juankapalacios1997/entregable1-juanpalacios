@@ -84,29 +84,7 @@ function actualizarLocalStorage() {
     localStorage.setItem('infoUsuario', JSON.stringify(infoUsuario));
 }
 
-function handleCarritoItem(item) {
-    if (!carrito.length) {
-        return;
-    }
-
-    const carritoContainer = document.getElementById("carritoContainer");
-
-    if (carrito.length === 1 && !carritoLlamado) {
-        carritoContainer.innerHTML = `
-            <div id="carritoContainerChild">
-                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
-                <div class="carrito-card-container" id="carritoCardContainer"></div>
-            </div>
-        `
-        carritoLlamado = true;
-
-        handleCarritoItem(item);
-        
-        return;
-    }
-
-    const carritoCardContainer = document.getElementById("carritoCardContainer");
-
+function crearCarritoCard(item) {
     const carritoCard = document.createElement("div");
 
     carritoCard.id = item.id;
@@ -120,6 +98,72 @@ function handleCarritoItem(item) {
             <span>$${convertirDolarPesoArg(item.precioUsd)}</span>
         </div>
     `
+
+    return carritoCard;
+}
+
+function handleAllCarrito() {
+    if (!carrito.length) {
+        return;
+    }
+
+    const carritoContainer = document.getElementById("carritoContainer");
+
+    if (!carritoContainer.querySelector("#carritoCardContainer") && !carritoLlamado) {
+        carritoContainer.innerHTML = `
+            <div id="carritoContainerChild">
+                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
+                <div class="carrito-card-container" id="carritoCardContainer"></div>
+            </div>
+        `
+        carritoLlamado = true;
+    }
+
+    carrito.forEach(item => {
+        const carritoCard = crearCarritoCard(item);
+
+        carritoContainer.querySelector("#carritoCardContainer").appendChild(carritoCard);
+
+        const eliminarBtn = document.createElement("button");
+
+        eliminarBtn.innerText = "Eliminar";
+
+        eliminarBtn.addEventListener("click", () => eliminarItem(item.id))
+
+        const cardDescription = carritoCard.querySelector(".card-description");
+
+        cardDescription.appendChild(eliminarBtn);
+
+    })
+
+    actualizarPrecioCarrito();
+
+}
+
+function handleCarritoItem(item) {
+    if (!carrito.length) {
+        return;
+    }
+
+    const carritoContainer = document.getElementById("carritoContainer");
+
+    const carritoCardContainer = document.getElementById("carritoCardContainer");
+
+    if (!carritoCardContainer && !carritoLlamado) {
+        carritoContainer.innerHTML = `
+            <div id="carritoContainerChild">
+                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
+                <div class="carrito-card-container" id="carritoCardContainer"></div>
+            </div>
+        `
+        carritoLlamado = true;
+
+        handleCarritoItem(item);
+        
+        return;
+    }
+
+    const carritoCard = crearCarritoCard(item);
 
     carritoCardContainer.appendChild(carritoCard);
 
@@ -188,6 +232,8 @@ function inizializarApp() {
 
         nombre = infoUsuarioJson.nombre;
         carrito = infoUsuarioJson.carrito;
+
+        handleAllCarrito();
 
     } else {
 
