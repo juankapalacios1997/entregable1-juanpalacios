@@ -1,6 +1,8 @@
 import { catalogoCompleto } from "../assets/catalogue.js";
 
-const carrito = [];
+let carrito = [];
+
+let carritoLlamado = false;
 
 function bienvenida() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
@@ -36,12 +38,74 @@ function crearDescripciones(producto) {
     return `${producto + descripcion[randomIndex]}`
 }
 
+function eliminarItem(id) {
+    if (!id) {
+        return;
+    }
+
+    carrito = carrito.filter(item => item.id !== id);
+
+    const elementToRemove = document.getElementById(`${id}`);
+
+    elementToRemove.parentNode.removeChild(elementToRemove);
+
+}
+
+function handleCarrito(item) {
+    if (!carrito.length) {
+        return;
+    }
+
+    const carritoContainer = document.getElementById("carritoContainer");
+
+    if (carrito.length === 1 && !carritoLlamado) {
+        carritoContainer.innerHTML = `
+            <div class="carrito-card-container" id="carritoCardContainer">
+                <h4>Tu carrito</h4>
+            </div>
+        `
+        carritoLlamado = true;
+
+        handleCarrito(item);
+        
+        return;
+    }
+
+    const carritoCardContainer = document.getElementById("carritoCardContainer");
+
+    const carritoCard = document.createElement("div");
+
+    carritoCard.id = item.id;
+
+    carritoCard.className = "carrito-card";
+
+    carritoCard.innerHTML = `
+        <img src="${item.imagen}" />
+        <div class="card-description">
+            <h5>${item.categoria} ${item.nombre} ${item.cantidad}</h5>
+            <span>${item.precio}</span>
+        </div>
+    `
+
+    carritoCardContainer.appendChild(carritoCard);
+
+    const eliminarBtn = document.createElement("button");
+
+    eliminarBtn.innerText = "Eliminar";
+
+    eliminarBtn.addEventListener("click", () => eliminarItem(item.id))
+
+    const cardDescription = carritoCard.querySelector(".card-description");
+
+    cardDescription.appendChild(eliminarBtn);
+}
+
 function anadirAlCarrito(id) {
     const itemToAdd = catalogoCompleto.find(i => i.id === id);
 
     carrito.push(itemToAdd);
 
-    console.log(carrito);
+    handleCarrito(itemToAdd);
 }
 
 const cardContainer = document.getElementById("cardContainer");
@@ -71,8 +135,8 @@ catalogoCompleto.forEach((item) => {
     cardContainer.appendChild(card);
 })
 
-// const nombre = bienvenida();
+const nombre = bienvenida();
 
-// const mainTitle = document.getElementById("mainTitle");
+const mainTitle = document.getElementById("mainTitle");
 
-// mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
+mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
