@@ -2,9 +2,11 @@ import { catalogoCompleto } from "../assets/catalogue.js";
 
 let carrito = [];
 
+let nombre = "";
+
 let carritoLlamado = false;
 
-function bienvenida() {
+function inicializarNombre() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
 
     if (!nombre) {
@@ -51,14 +53,38 @@ function eliminarItem(id) {
 
     if (!carrito.length) {
         const toRemoveAllEle = document.getElementById("carritoContainerChild");
-        console.log(toRemoveAllEle);
         toRemoveAllEle.parentNode.removeChild(toRemoveAllEle);
         carritoLlamado = false;
     }
 
+    actualizarPrecioCarrito();
+
 }
 
-function handleCarrito(item) {
+function calcularPrecioCarrito() {
+    const initialValue = 0;
+
+    let sumaEnUSD = carrito.reduce((acc, curr) => acc + curr.precioUsd, initialValue);
+
+    return `Total: $${convertirDolarPesoArg(sumaEnUSD)}`;
+}
+
+function actualizarPrecioCarrito() {
+    const precioTotal = document.getElementById("precioTotal");
+
+    precioTotal.innerText = calcularPrecioCarrito();
+}
+
+function actualizarLocalStorage() {
+    const infoUsuario = {
+        nombre: nombre,
+        carrito: carrito
+    };
+
+    localStorage.setItem('infoUsuario', JSON.stringify(infoUsuario));
+}
+
+function handleCarritoItem(item) {
     if (!carrito.length) {
         return;
     }
@@ -68,13 +94,13 @@ function handleCarrito(item) {
     if (carrito.length === 1 && !carritoLlamado) {
         carritoContainer.innerHTML = `
             <div id="carritoContainerChild">
-                <h4>Tu carrito</h4>
+                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
                 <div class="carrito-card-container" id="carritoCardContainer"></div>
             </div>
         `
         carritoLlamado = true;
 
-        handleCarrito(item);
+        handleCarritoItem(item);
         
         return;
     }
@@ -106,6 +132,10 @@ function handleCarrito(item) {
     const cardDescription = carritoCard.querySelector(".card-description");
 
     cardDescription.appendChild(eliminarBtn);
+
+    actualizarPrecioCarrito();
+
+    actualizarLocalStorage();
 }
 
 function anadirAlCarrito(id) {
@@ -113,7 +143,7 @@ function anadirAlCarrito(id) {
 
     carrito.push(itemToAdd);
 
-    handleCarrito(itemToAdd);
+    handleCarritoItem(itemToAdd);
 }
 
 function inicializarCatalogo() {
@@ -142,13 +172,33 @@ function inicializarCatalogo() {
         card.querySelector(".actions-section").appendChild(btn);
 
         cardContainer.appendChild(card);
+
     })
+
 }
 
-const nombre = bienvenida();
+function inizializarApp() {
 
-const mainTitle = document.getElementById("mainTitle");
+    inicializarCatalogo();
+    
+    const localInfoUsuario = localStorage.getItem("infoUsuario");
+    
+    if (localInfoUsuario) {
+        const infoUsuarioJson = JSON.parse(localInfoUsuario);
 
-mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
+        nombre = infoUsuarioJson.nombre;
+        carrito = infoUsuarioJson.carrito;
 
-inicializarCatalogo();
+    } else {
+
+        nombre = inicializarNombre();
+
+    }
+
+    const mainTitle = document.getElementById("mainTitle");
+
+    mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
+
+}
+
+inizializarApp();
