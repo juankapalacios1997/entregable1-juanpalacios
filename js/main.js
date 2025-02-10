@@ -14,9 +14,6 @@ function cerrarSesion() {
 
 function inicializarNombre() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
-    if (!nombre) {
-        alert(`Ocurrio un error, por favor intente mas tarde`);
-    }
 
     return nombre;
 }
@@ -285,7 +282,7 @@ function inizializarApp() {
         handleAllCarrito();
 
     } else {
-        nombre = inicializarNombre()
+        nombre = inicializarNombre();
     }
     
     actualizarLocalStorage();
