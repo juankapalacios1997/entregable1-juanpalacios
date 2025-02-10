@@ -6,6 +6,8 @@ let nombre = "";
 
 let carritoLlamado = false;
 
+let carritoIdCounter = 0;
+
 function inicializarNombre() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
 
@@ -40,14 +42,14 @@ function crearDescripciones(producto) {
     return `${producto + descripcion[randomIndex]}`
 }
 
-function eliminarItem(carritoId) {
+function eliminarItem(item) {
+    const { carritoId } = item;
+
     if (!carritoId) {
         return;
     }
-
-    const id = carrito.find(item => item.carritoId === carritoId)?.id;
     
-    const elementToRemove = document.getElementById(`${id}`);
+    const elementToRemove = document.getElementById(`${carritoId}`);
 
     elementToRemove.parentNode.removeChild(elementToRemove);
 
@@ -95,7 +97,7 @@ function actualizarLocalStorage() {
 function crearCarritoCard(item) {
     const carritoCard = document.createElement("div");
 
-    carritoCard.id = item.id;
+    carritoCard.id = item.carritoId;
 
     carritoCard.className = "carrito-card";
 
@@ -136,7 +138,7 @@ function handleAllCarrito() {
 
         eliminarBtn.innerText = "Eliminar";
 
-        eliminarBtn.addEventListener("click", () => eliminarItem(item.carritoId))
+        eliminarBtn.addEventListener("click", () => eliminarItem(item))
 
         const cardDescription = carritoCard.querySelector(".card-description");
 
@@ -177,7 +179,7 @@ function handleCarritoItem(item) {
 
     eliminarBtn.innerText = "Eliminar";
 
-    eliminarBtn.addEventListener("click", () => eliminarItem(item.carritoId))
+    eliminarBtn.addEventListener("click", () => eliminarItem(item))
 
     const cardDescription = carritoCard.querySelector(".card-description");
 
@@ -191,7 +193,9 @@ function handleCarritoItem(item) {
 function anadirAlCarrito(id) {
     const itemToFind = catalogoCompleto.find(i => i.id === id);
 
-    const itemToAdd = {...itemToFind, carritoId: Math.floor(Math.random() * 9999) }
+    const itemToAdd = {...itemToFind, carritoId: `carrito-${carritoIdCounter}` }
+
+    carritoIdCounter += 1;
 
     carrito.push(itemToAdd);
 
