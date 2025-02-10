@@ -208,8 +208,8 @@ function inicializarCatalogo() {
                 <img src="${item.imagen}"/>
                 <h4 class="text-align-center font-weight-600">${item.nombre + " " + item.cantidad}</h4>
                 <span class="text-align-center font-weight-500 descripcion">${crearDescripciones(item.nombre)}</span>
-                <span class="text-align-center font-weight-500">Categoria: ${item.categoria}</span>
-                <span class="text-align-center font-weight-500">Precio: $${convertirDolarPesoArg(item.precioUsd)}</span>
+                <span class="text-align-center font-weight-600 categoria">Categoria: ${item.categoria}</span>
+                <span class="text-align-center font-weight-600 precio">Precio: $${convertirDolarPesoArg(item.precioUsd)}</span>
                 <div class="actions-section">
                 </div>
             </div>
