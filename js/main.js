@@ -8,6 +8,10 @@ let carritoLlamado = false;
 
 let carritoIdCounter = 0;
 
+function cerrarSesion() {
+    localStorage.removeItem("infoUsuario");
+}
+
 function inicializarNombre() {
     const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
 
@@ -40,6 +44,12 @@ function crearDescripciones(producto) {
     const randomIndex = Math.floor(Math.random() * descripcion.length);
 
     return `${producto + descripcion[randomIndex]}`
+}
+
+function eliminarAllCarrito() {
+    carrito.forEach(item => {
+        eliminarItem(item)
+    });
 }
 
 function eliminarItem(item) {
@@ -236,6 +246,14 @@ function inicializarCatalogo() {
 function inizializarApp() {
 
     inicializarCatalogo();
+
+    const cerrarSesionLink = document.getElementById("cerrarSesionLink");
+
+    cerrarSesionLink.addEventListener("click", () => {
+        eliminarAllCarrito();
+        cerrarSesion();
+        inizializarApp();
+    });
     
     const localInfoUsuario = localStorage.getItem("infoUsuario");
     
