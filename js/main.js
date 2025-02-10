@@ -239,14 +239,7 @@ function inizializarApp() {
         const infoUsuarioJson = JSON.parse(localInfoUsuario);
 
         nombre = infoUsuarioJson.nombre;
-        carrito = infoUsuarioJson.carrito.map(item => (
-            {
-                ...item,
-                carritoId: Math.floor(Math.random() * 9999)
-            }
-        ));
-
-        console.log(carrito);
+        carrito = infoUsuarioJson.carrito;
 
         handleAllCarrito();
 
