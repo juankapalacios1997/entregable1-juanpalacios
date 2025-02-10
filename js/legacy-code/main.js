@@ -54,8 +54,6 @@ const seleccionCatalogo = (nombre) => {
     }
 
     confirm(`Listo, Sr(a) ${nombre}! Puede consultar nuestro catalogo en la consola ordenado de mayor a menor precio.`);
-
-    console.log(temp2.sort((a, b) => a.precio - b.precio));
 }
 
 const nombre = bienvenida();

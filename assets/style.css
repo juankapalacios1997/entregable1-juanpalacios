@@ -85,13 +85,13 @@ li a:hover:not(.active) {
 
 .carrito-container {
     margin: 3.5vh auto 0;
-    max-width: 78vw;
+    max-width: 82vw;
 }
 
 .carrito-card-container {
     display: grid;
     grid-template-columns: auto auto auto auto;
-    row-gap: 6vh;
+    row-gap: 1.3vh;
     border-radius: 24px;
     padding: 24px;
 }
@@ -101,7 +101,8 @@ li a:hover:not(.active) {
 }
 
 .carrito-card {
-    width: 14vw;
+    width: 16vw;
+    max-height: 16.5vh;
     display: flex;
     padding: 24px;
     color: aliceblue;
@@ -110,7 +111,8 @@ li a:hover:not(.active) {
 }
 
 .carrito-card img {
-    max-width: 5vw;
+    width: 5vw;
+    height: 16.8vh;
     border-radius: 24px;
 }
 
