@@ -189,9 +189,11 @@ function handleCarritoItem(item) {
 }
 
 function anadirAlCarrito(id) {
-    const itemToAdd = catalogoCompleto.find(i => i.id === id);
+    const itemToFind = catalogoCompleto.find(i => i.id === id);
 
-    carrito.push({...itemToAdd, carritoId: Math.floor(Math.random() * 9999) });
+    const itemToAdd = {...itemToFind, carritoId: Math.floor(Math.random() * 9999) }
+
+    carrito.push(itemToAdd);
 
     handleCarritoItem(itemToAdd);
 }
