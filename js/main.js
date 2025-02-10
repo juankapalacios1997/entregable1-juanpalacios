@@ -57,12 +57,17 @@ function eliminarItem(item) {
     }
     
     const elementToRemove = document.getElementById(`${carritoId}`);
-    elementToRemove.parentNode.removeChild(elementToRemove);
+    if (elementToRemove) {
+        elementToRemove.parentNode.removeChild(elementToRemove);
+    }
 
     carrito = carrito.filter(item => item.carritoId !== carritoId);
     if (!carrito.length) {
         const toRemoveAllEle = document.getElementById("carritoContainerChild");
-        toRemoveAllEle.parentNode.removeChild(toRemoveAllEle);
+        if (toRemoveAllEle) {
+            toRemoveAllEle.parentNode.removeChild(toRemoveAllEle);
+        }
+
         carritoLlamado = false;
     }
 
@@ -83,7 +88,9 @@ function actualizarPrecioCarrito() {
     }
 
     const precioTotal = document.getElementById("precioTotal");
-    precioTotal.innerText = calcularPrecioCarrito();
+    if (precioTotal) {
+        precioTotal.innerText = calcularPrecioCarrito();
+    }
 }
 
 function actualizarLocalStorage() {
@@ -93,6 +100,44 @@ function actualizarLocalStorage() {
     };
 
     localStorage.setItem('infoUsuario', JSON.stringify(infoUsuario));
+}
+
+function preguntarEdad() {
+    document.querySelector("#comprarBtn").style.display = 'none';
+    const inputEdad = document.createElement("div");
+    inputEdad.innerHTML = `
+        <label for="edadUsuario">Por favor introduce tu edad</label>
+        <input type="text" id="edadUsuario" name="edadUsuario">
+        <button id="submitBtn">Confirmar</button>
+    `
+
+    document.querySelector("#carritoContainerChild").appendChild(inputEdad);
+
+    inputEdad.querySelector("#submitBtn").addEventListener("click", () => {
+        const anadirCarritoBtns = document.querySelectorAll(".anadir-carrito-btn");
+
+        anadirCarritoBtns.forEach(btn => btn.disabled = true);
+
+        const edadValue = document.querySelector("#edadUsuario").value;
+        if (edadValue < 18) {
+            document.querySelector("#carritoContainer").innerHTML = `
+                <div>Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad</div>
+            `;
+        } else {
+            document.querySelector("#carritoContainer").innerHTML = `
+                <div>Gracias por su compra! ${calcularPrecioCarrito()}</div>
+            `;
+        }
+
+        eliminarAllCarrito();
+        actualizarLocalStorage();
+
+        setTimeout(() => {
+            document.querySelector("#carritoContainer").innerHTML = "";
+            anadirCarritoBtns.forEach(btn => btn.disabled = false);
+        }, 3500);
+
+    })
 }
 
 function crearCarritoCard(item) {
@@ -110,6 +155,23 @@ function crearCarritoCard(item) {
     return carritoCard;
 }
 
+function inicializarCarritoContainer() {
+    const carritoContainer = document.getElementById("carritoContainer");
+    carritoContainer.innerHTML = `
+            <div id="carritoContainerChild">
+                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
+                <div class="carrito-card-container" id="carritoCardContainer"></div>
+            </div>
+        `
+    const comprarBtn = document.createElement("button");
+    comprarBtn.id = "comprarBtn";
+    comprarBtn.innerText = "Comprar";
+    comprarBtn.addEventListener("click", () => preguntarEdad());
+    carritoContainer.querySelector("#carritoContainerChild").appendChild(comprarBtn);
+
+    carritoLlamado = true;
+}
+
 function handleAllCarrito() {
     if (!carrito.length) {
         return;
@@ -117,13 +179,7 @@ function handleAllCarrito() {
 
     const carritoContainer = document.getElementById("carritoContainer");
     if (!carritoContainer.querySelector("#carritoCardContainer") && !carritoLlamado) {
-        carritoContainer.innerHTML = `
-            <div id="carritoContainerChild">
-                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
-                <div class="carrito-card-container" id="carritoCardContainer"></div>
-            </div>
-        `
-        carritoLlamado = true;
+        inicializarCarritoContainer();
     }
 
     carrito.forEach(item => {
@@ -149,15 +205,9 @@ function handleCarritoItem(item) {
 
     const carritoContainer = document.getElementById("carritoContainer");
     if (!carritoContainer.querySelector("#carritoCardContainer") && !carritoLlamado) {
-        carritoContainer.innerHTML = `
-            <div id="carritoContainerChild">
-                <h4>Tu carrito &#8226; <strong id="precioTotal"></strong></h4>
-                <div class="carrito-card-container" id="carritoCardContainer"></div>
-            </div>
-        `
-        carritoLlamado = true;
-
+        inicializarCarritoContainer();
         handleCarritoItem(item);
+
         return;
     }
 
@@ -202,6 +252,7 @@ function inicializarCatalogo() {
         `;
 
         const btn = document.createElement("button");
+        btn.className = "anadir-carrito-btn"
         btn.innerText = "Anadir al carrito";
         btn.addEventListener("click", () => anadirAlCarrito(item.id));
 
