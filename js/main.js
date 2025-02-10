@@ -268,8 +268,10 @@ function inizializarApp() {
     } else {
 
         nombre = inicializarNombre();
-
+        
     }
+    
+    actualizarLocalStorage();
 
     const mainTitle = document.getElementById("mainTitle");
 
