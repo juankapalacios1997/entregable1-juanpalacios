@@ -12,10 +12,23 @@ function cerrarSesion() {
     localStorage.removeItem("infoUsuario");
 }
 
-function inicializarNombre() {
-    const nombre = prompt("Bienvenido a la vinateria 'La Gran Bodega'. Por favor introduce tu nombre:");
+async function inicializarNombre() {
+    const { value: nombre } = await Swal.fire({
+        title: "Por favor escriba su nombre",
+        input: "text",
+        inputLabel: "Nombre",
+        showCancelButton: true,
+        inputValidator: (value) => {
+            if (!value) {
+                return "Necesita escribir su nombre";
+            }
+        }
+    });
+    if (nombre) {
+        return nombre;
+    }
 
-    return nombre;
+    return "";
 }
 
 function convertirDolarPesoArg(precio) {
@@ -255,15 +268,19 @@ function inicializarCatalogo() {
 
         card.querySelector(".actions-section").appendChild(btn);
         cardContainer.appendChild(card);
-
     })
 
 }
 
-function inizializarApp() {
+async function inizializarApp() {
 
-    inicializarCatalogo();
-
+    const catalogoCards = document.querySelectorAll(".card-item");
+    
+    if (!catalogoCards.length) {
+        inicializarCatalogo();
+    }
+    
+    
     const cerrarSesionLink = document.getElementById("cerrarSesionLink");
     cerrarSesionLink.addEventListener("click", () => {
         eliminarAllCarrito();
@@ -282,14 +299,13 @@ function inizializarApp() {
         handleAllCarrito();
 
     } else {
-        nombre = inicializarNombre();
+        nombre = await inicializarNombre();
     }
     
     actualizarLocalStorage();
 
     const mainTitle = document.getElementById("mainTitle");
     mainTitle.innerText = `Bienvenido a la pagina de la vinateria "La Gran Bodega", Sr(a) ${nombre}.`;
-
 }
 
 inizializarApp();
