@@ -112,42 +112,86 @@ function actualizarLocalStorage() {
     localStorage.setItem('infoUsuario', JSON.stringify(infoUsuario));
 }
 
-function preguntarEdad() {
-    document.querySelector("#comprarBtn").style.display = 'none';
-    const inputEdad = document.createElement("div");
-    inputEdad.innerHTML = `
-        <label for="edadUsuario">Por favor introduce tu edad</label>
-        <input type="text" id="edadUsuario" name="edadUsuario">
-        <button id="submitBtn">Confirmar</button>
-    `
-
-    document.querySelector("#carritoContainerChild").appendChild(inputEdad);
-
-    inputEdad.querySelector("#submitBtn").addEventListener("click", () => {
-        const anadirCarritoBtns = document.querySelectorAll(".anadir-carrito-btn");
-
-        anadirCarritoBtns.forEach(btn => btn.disabled = true);
-
-        const edadValue = document.querySelector("#edadUsuario").value;
-        if (edadValue < 18) {
-            document.querySelector("#carritoContainer").innerHTML = `
-                <div>Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad</div>
-            `;
-        } else {
-            document.querySelector("#carritoContainer").innerHTML = `
-                <div>Gracias por su compra! ${calcularPrecioCarrito()}</div>
-            `;
-        }
-
-        eliminarAllCarrito();
-        actualizarLocalStorage();
-
-        setTimeout(() => {
-            document.querySelector("#carritoContainer").innerHTML = "";
-            anadirCarritoBtns.forEach(btn => btn.disabled = false);
-        }, 3500);
-
+function procederCompra() {
+    const customHtml = document.createElement("div");
+    customHtml.style.border = "1px dotted #282828";
+    customHtml.style.borderRadius = "24px";
+    carrito.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "checkout-description";
+        itemDiv.innerHTML = `
+            <div class="checkout-description-content">
+                <span class="caption">${item.categoria} ${item.nombre} ${item.cantidad}</span>
+                <span class="precio">$${convertirDolarPesoArg(item.precioUsd)}</span>
+            </div>
+            <img src="${item.imagen}" />
+        `
+        customHtml.appendChild(itemDiv);
     })
+    Swal.fire({
+        title: "Confirme su compra",
+        html: customHtml,
+        showCancelButton: true,
+        confirmButtonText: "Confirmar",
+        cancelButtonText: "Cancelar",
+    })
+}
+
+async function preguntarEdad() {
+    const objetoFechaActual = new Date();
+    const objetoFechaMinima = new Date (objetoFechaActual.setYear(objetoFechaActual.getFullYear() - 18));
+    console.log(objetoFechaActual, objetoFechaMinima);
+    const { value: date } = await Swal.fire({
+            title: "select departure date",
+            input: "date",
+            didOpen: () => {
+            const today = (new Date()).toISOString();
+            Swal.getInput().max = today.split("T")[0];
+            }
+    });
+    const objetoFechaNacimiento = new Date(date);
+    if (objetoFechaNacimiento.getTime() >= objetoFechaMinima.getTime()) {
+        Swal.fire("Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad.");
+    } else {
+        setTimeout(() => {
+            procederCompra();
+        }, 500);
+    }
+    // document.querySelector("#comprarBtn").style.display = 'none';
+    // const inputEdad = document.createElement("div");
+    // inputEdad.innerHTML = `
+    //     <label for="edadUsuario">Por favor introduce tu edad</label>
+    //     <input type="text" id="edadUsuario" name="edadUsuario">
+    //     <button id="submitBtn">Confirmar</button>
+    // `
+
+    // document.querySelector("#carritoContainerChild").appendChild(inputEdad);
+
+    // inputEdad.querySelector("#submitBtn").addEventListener("click", () => {
+    //     const anadirCarritoBtns = document.querySelectorAll(".anadir-carrito-btn");
+
+    //     anadirCarritoBtns.forEach(btn => btn.disabled = true);
+
+    //     const edadValue = document.querySelector("#edadUsuario").value;
+    //     if (edadValue < 18) {
+    //         document.querySelector("#carritoContainer").innerHTML = `
+    //             <div>Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad</div>
+    //         `;
+    //     } else {
+    //         document.querySelector("#carritoContainer").innerHTML = `
+    //             <div>Gracias por su compra! ${calcularPrecioCarrito()}</div>
+    //         `;
+    //     }
+
+    //     eliminarAllCarrito();
+    //     actualizarLocalStorage();
+
+    //     setTimeout(() => {
+    //         document.querySelector("#carritoContainer").innerHTML = "";
+    //         anadirCarritoBtns.forEach(btn => btn.disabled = false);
+    //     }, 3500);
+
+    // })
 }
 
 function crearCarritoCard(item) {

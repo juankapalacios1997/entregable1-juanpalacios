@@ -166,3 +166,30 @@ li a:hover:not(.active) {
 .actions-section {
     margin: 2vh auto 0;
 }
+
+.checkout-description {
+    margin: 1.15em auto;
+    max-width: 24vw;
+    text-align: start;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.checkout-description-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.checkout-description-content .caption {
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+
+.checkout-description-content .precio {
+    font-size: 12px;
+}
+
+.checkout-description img {
+    max-width: 4em;
+}
