@@ -127,7 +127,6 @@ function resolverCompra() {
             setTimeout(() => {
                 Swal.close();
                 const success = Math.random() <= 0.95;
-                console.log(success);
                 if (success) {
                     resolve("Tu compra ha sido procesada con exito!");
                 } else {
@@ -199,7 +198,6 @@ function procederCompra() {
 async function preguntarEdad() {
     const objetoFechaActual = new Date();
     const objetoFechaMinima = new Date (objetoFechaActual.setYear(objetoFechaActual.getFullYear() - 18));
-    console.log(objetoFechaActual, objetoFechaMinima);
     const { value: date } = await Swal.fire({
             title: "Por favor indique su edad",
             input: "date",
