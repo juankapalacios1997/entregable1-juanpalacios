@@ -17,7 +17,7 @@ async function inicializarNombre() {
         title: "Por favor escriba su nombre",
         input: "text",
         inputLabel: "Nombre",
-        showCancelButton: true,
+        showCancelButton: false,
         confirmButtonColor: "#a60b00",
         inputValidator: (value) => {
             if (!value) {
@@ -29,7 +29,7 @@ async function inicializarNombre() {
         return nombre;
     }
 
-    return "";
+    return "Anonimo";
 }
 
 function convertirDolarPesoArg(precio) {
@@ -182,11 +182,16 @@ function procederCompra() {
                 Swal.fire({
                     title: err,
                     icon: "error",
+                    showConfirmButton: false,
                     confirmButtonColor: "#a60b00",
                 });
             })
         } else if (result.isDenied) {
-            Swal.fire("Continue viendo nuestra tienda", "", "info");
+            Swal.fire({
+                title: "Continue viendo nuestra tienda!",
+                icon: "info",
+                confirmButtonColor: "#a60b00",
+            });
         }
     });
 }
@@ -207,10 +212,18 @@ async function preguntarEdad() {
     });
     const objetoFechaNacimiento = new Date(date);
     if (objetoFechaNacimiento.getTime() >= objetoFechaMinima.getTime()) {
-        Swal.fire("Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad.");
-        eliminarAllCarrito();
-        cerrarSesion();
-        inizializarApp();
+        Swal.fire({
+            title: "Lo sentimos, la venta de bebidas alcoholicas esta prohibida para los menores de edad",
+            icon: "error",
+            confirmButtonColor: "#a60b00",
+        })
+        .then((result) => {
+            if (result.isConfirmed) {
+                eliminarAllCarrito();
+                cerrarSesion();
+                inizializarApp();
+            };
+        });
     } else {
         setTimeout(() => {
             procederCompra();
