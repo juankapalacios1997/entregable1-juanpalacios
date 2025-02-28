@@ -18,6 +18,7 @@ async function inicializarNombre() {
         input: "text",
         inputLabel: "Nombre",
         showCancelButton: true,
+        confirmButtonColor: "#a60b00",
         inputValidator: (value) => {
             if (!value) {
                 return "Necesita escribir su nombre";
@@ -112,6 +113,33 @@ function actualizarLocalStorage() {
     localStorage.setItem('infoUsuario', JSON.stringify(infoUsuario));
 }
 
+function resolverCompra() {
+    return new Promise((resolve, reject) => {
+        try {
+            Swal.fire({
+                title: "Por favor, espere",
+                html: `
+                    <span class="loader"></span>
+                `,
+                showConfirmButton: false,
+                showCancelButton: false,
+            })
+            setTimeout(() => {
+                Swal.close();
+                const success = Math.random() <= 0.95;
+                console.log(success);
+                if (success) {
+                    resolve("Tu compra ha sido procesada con exito!");
+                } else {
+                    reject("Ocurrio un error al procesar su compra, por favor intente mas tarde");
+                }
+            }, 2000)
+        } catch(e) {
+            console.error(e);
+        }
+    })
+}
+
 function procederCompra() {
     const customHtml = document.createElement("div");
     customHtml.style.border = "1px dotted #282828";
@@ -134,7 +162,33 @@ function procederCompra() {
         showCancelButton: true,
         confirmButtonText: "Confirmar",
         cancelButtonText: "Cancelar",
-    })
+        confirmButtonColor: "#a60b00",
+        cancelButtonColor: "#353535",
+    }).then((result) => {
+        if (result.isConfirmed) {
+            resolverCompra()
+            .then((res) => {
+                Swal.fire({
+                    title: res,
+                    icon: "success",
+                    showConfirmButton: false,
+                });
+                setTimeout(() => {
+                    eliminarAllCarrito();
+                    cerrarSesion();
+                    inizializarApp();
+                }, 4000);
+            }).catch((err) => {
+                Swal.fire({
+                    title: err,
+                    icon: "error",
+                    confirmButtonColor: "#a60b00",
+                });
+            })
+        } else if (result.isDenied) {
+            Swal.fire("Continue viendo nuestra tienda", "", "info");
+        }
+    });
 }
 
 async function preguntarEdad() {
@@ -142,56 +196,26 @@ async function preguntarEdad() {
     const objetoFechaMinima = new Date (objetoFechaActual.setYear(objetoFechaActual.getFullYear() - 18));
     console.log(objetoFechaActual, objetoFechaMinima);
     const { value: date } = await Swal.fire({
-            title: "select departure date",
+            title: "Por favor indique su edad",
             input: "date",
+            confirmButtonColor: "#a60b00",
+            cancelButtonColor: "#353535",
             didOpen: () => {
             const today = (new Date()).toISOString();
-            Swal.getInput().max = today.split("T")[0];
+                Swal.getInput().max = today.split("T")[0];
             }
     });
     const objetoFechaNacimiento = new Date(date);
     if (objetoFechaNacimiento.getTime() >= objetoFechaMinima.getTime()) {
         Swal.fire("Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad.");
+        eliminarAllCarrito();
+        cerrarSesion();
+        inizializarApp();
     } else {
         setTimeout(() => {
             procederCompra();
         }, 500);
     }
-    // document.querySelector("#comprarBtn").style.display = 'none';
-    // const inputEdad = document.createElement("div");
-    // inputEdad.innerHTML = `
-    //     <label for="edadUsuario">Por favor introduce tu edad</label>
-    //     <input type="text" id="edadUsuario" name="edadUsuario">
-    //     <button id="submitBtn">Confirmar</button>
-    // `
-
-    // document.querySelector("#carritoContainerChild").appendChild(inputEdad);
-
-    // inputEdad.querySelector("#submitBtn").addEventListener("click", () => {
-    //     const anadirCarritoBtns = document.querySelectorAll(".anadir-carrito-btn");
-
-    //     anadirCarritoBtns.forEach(btn => btn.disabled = true);
-
-    //     const edadValue = document.querySelector("#edadUsuario").value;
-    //     if (edadValue < 18) {
-    //         document.querySelector("#carritoContainer").innerHTML = `
-    //             <div>Lo sentimos, la venta de bebidas alcoholicas esta prohibida para menores de edad</div>
-    //         `;
-    //     } else {
-    //         document.querySelector("#carritoContainer").innerHTML = `
-    //             <div>Gracias por su compra! ${calcularPrecioCarrito()}</div>
-    //         `;
-    //     }
-
-    //     eliminarAllCarrito();
-    //     actualizarLocalStorage();
-
-    //     setTimeout(() => {
-    //         document.querySelector("#carritoContainer").innerHTML = "";
-    //         anadirCarritoBtns.forEach(btn => btn.disabled = false);
-    //     }, 3500);
-
-    // })
 }
 
 function crearCarritoCard(item) {
